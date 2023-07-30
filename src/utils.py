@@ -22,10 +22,13 @@ def parse_saves(save_path_root):
 
 
 def backup_save(save_path):
-    shutil.copy2(rf"{save_path}", rf"{save_path}.bak")
+    assert os.path.exists(save_path)
+    os.rename(rf"{save_path}", rf"{save_path}.bak")
+    return rf"{save_path}.bak"
 
 
 def restore_save(backup_path):
+    assert os.path.exists(backup_path)
     if os.path.exists(rf"{backup_path[:-4]}"):
         os.remove(rf"{backup_path[:-4]}")
     os.rename(rf"{backup_path}", rf"{backup_path[:-4]}")
@@ -38,17 +41,23 @@ def discover_baks(save_path_root):
     }
 
 
-def pprint_dict(dict):
-    for k, v in dict.items():
-        print(f"\t - {k}: {v}\n")
+def pprint_dict(dict, keys_only):
+    if keys_only:
+        for i, k in enumerate(dict.keys()):
+            print(f"\t{i}. {k}\n")
+    else:
+        for k, v in dict.items():
+            print(f"\t - {k}: {v}\n")
+
 
 
 def unzip_save(save_path):
-    if os.path.exists(rf"{save_path}"):
-        tmp_dir = "\\".join(save_path.split("\\")[:-1]) + r"\tmp"
-        os.makedirs(tmp_dir, exist_ok=True)
-        with ZipFile(save_path, "r") as save:
-            save.extractall(tmp_dir)
+    assert os.path.exists(rf"{save_path}")
+    tmp_dir = "\\".join(save_path.split("\\")[:-1]) + r"\tmp"
+    os.makedirs(tmp_dir, exist_ok=True)
+    with ZipFile(save_path, "r") as save:
+        save.extractall(tmp_dir)
+    return tmp_dir
 
 
 def zip_save(save_path, cleanup=True):
@@ -64,7 +73,7 @@ def zip_save(save_path, cleanup=True):
 def get_save_state(tmp_dir):
     save_state_path = glob(rf"{tmp_dir}\*2nd.ntwtf.json")[0]
     with open(save_state_path, "r") as save:
-        return json.load(save)
+        return save_state_path, json.load(save)
 
 
 def write_save_state(state, path):
