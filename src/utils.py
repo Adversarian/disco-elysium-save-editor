@@ -41,7 +41,7 @@ def discover_baks(save_path_root: str) -> dict:
     }
 
 
-def pprint_dict(dict: dict, keys_only: bool=False):
+def pprint_dict(dict: dict, keys_only: bool = False):
     if keys_only:
         for i, k in enumerate(dict.keys()):
             if k not in ["common_ancestor", "map"]:
@@ -50,7 +50,6 @@ def pprint_dict(dict: dict, keys_only: bool=False):
         for k, v in dict.items():
             if k not in ["common_ancestor", "map"]:
                 print(f"\t - {k}: {v}\n")
-
 
 
 def unzip_save(save_path: str) -> str:
@@ -62,7 +61,7 @@ def unzip_save(save_path: str) -> str:
     return tmp_dir
 
 
-def zip_save(save_path: str, cleanup: bool=True):
+def zip_save(save_path: str, cleanup: bool = True):
     tmp_dir = "\\".join(save_path.split("\\")[:-1]) + r"\tmp"
     with ZipFile(save_path, "w", ZIP_DEFLATED) as save:
         files = glob(rf"{tmp_dir}\*")
