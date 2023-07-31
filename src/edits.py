@@ -4,7 +4,6 @@ from functools import reduce
 
 MAPS = {
     "Doors": {
-        "common_ancestor": ["variousItemsHolder", "DoorStates"],
         "Whirling Door Tequila": ["Whirling Door Tequila"],
         "Bookstore Curtains": ["Bookstore Curtains"],
         "Whirling Door Klassje": ["Whirling Door Klassje"],
@@ -14,17 +13,18 @@ MAPS = {
         ],
         "Door Apartment 10": ["Door Apartment 10"],
         "Door Apartment 10 Open": ["Door Apartment 10 Open"],
+        "common_ancestor": ["variousItemsHolder", "DoorStates"],
     },
     "Time": {
-        "common_ancestor": ["sunshineClockTimeHolder", "time"],
         "Minutes Passed in Day": ["dayMinutes"],
+        "common_ancestor": ["sunshineClockTimeHolder", "time"],
     },
     "Resources": {
-        "common_ancestor": ["playerCharacter"],
         "Skill Points": ["SkillPoints"],
         "Money": ["Money"],
         "Health Consumables": ["healingPools", "ENDURANCE"],
         "Morale Consumables": ["healingPools", "VOLITION"],
+        "common_ancestor": ["playerCharacter"],
     },
     "All Thoughts": {
         "map": ["thoughtCabinetState", "thoughtListState"],
@@ -39,11 +39,11 @@ MAPS = {
 }
 
 
-def get_from_dict(dict, map):
+def get_from_dict(dict: dict, map: list):
     return reduce(operator.getitem, map, dict)
 
 
-def set_in_dict(dict, map, value):
+def set_in_dict(dict: dict, map: list, value):
     get_from_dict(dict, map[:-1])[map[-1]] = value
 
 
@@ -54,21 +54,35 @@ class SaveState:
         self._backup_path = backup_save(self._save_path)
         self._save_state_path, self._save_state = get_save_state(self._tmp_dir)
 
-    def set_door(self, key, value=True):
+    def set_door(self, key: str, value: bool = True):
         map = MAPS["Doors"]["common_ancestor"] + MAPS["Doors"][key]
         set_in_dict(self._save_state, map, value)
 
-    def set_time(self, key="Minutes Passed in Day", value="04:20"):
+    def get_door(self, key: str) -> bool:
+        map = MAPS["Doors"]["common_ancestor"] + MAPS["Doors"][key]
+        return get_from_dict(self._save_state, map)
+
+    def set_time(self, key: str = "Minutes Passed in Day", value: str = "04:20"):
         hours, minutes = value.split(":")
         total_minutes = 60 * int(hours) + int(minutes)
         map = MAPS["Time"]["common_ancestor"] + MAPS["Time"][key]
         set_in_dict(self._save_state, map, total_minutes)
 
-    def set_resource(self, key, value=99):
+    def get_time(self, key: str = "Minutes Passed in Day") -> str:
+        map = MAPS["Time"]["common_ancestor"] + MAPS["Time"][key]
+        total_minutes = get_from_dict(self._save_state, map)
+        hours, minutes = total_minutes // 60, total_minutes % 60
+        return f"{hours}:{minutes}"
+
+    def set_resource(self, key: str, value: int = 99):
         if key == "Money":
             value = int(value * 100)
         map = MAPS["Resources"]["common_ancestor"] + MAPS["Resources"][key]
         set_in_dict(self._save_state, map, value)
+
+    def get_resource(self, key: str) -> int:
+        map = MAPS["Resources"]["common_ancestor"] + MAPS["Resources"][key]
+        return get_from_dict(self._save_state, map)
 
     def set_all_unknown_thoughts(self):
         map_root = MAPS["All Thoughts"]["map"]
