@@ -1,7 +1,8 @@
-from utils import *
-from edits import *
 import random
 from enum import Enum
+
+from edits import *
+from utils import *
 
 STATES = Enum(
     "STATES",
@@ -18,6 +19,8 @@ STATES = Enum(
         "OPTIONS_EDIT_ROLLBACK",
         "OPTIONS_EDIT_COMMIT",
         "OPTIONS_RESTORE",
+        "OPTIONS_RESTORE_AUTO_DISCOVER_BACKUPS",
+        "OPTIONS_RESTORE_MANUAL_BACKUP",
     ],
 )
 
@@ -82,6 +85,7 @@ def get_input(cast_as=str, msg=""):
 
 
 def state_exit():
+    get_input(str, "Press Enter to continue ...")
     exit(0)
 
 
@@ -89,7 +93,7 @@ def state_start(first_time=True):
     if first_time:
         print(DISCLAIMER)
     print(WELCOME)
-    print(OPTIONS_EDIT_START)
+    print(OPTIONS_START)
     choice = get_input(int, get_prompt_msg())
     assert choice in [1, 2, 3]
     match choice:
@@ -115,7 +119,7 @@ def state_options_edit_start(previous_state):
 
 
 def state_manual_save():
-    return get_input(str, "Please enter the complete path to your save file.")
+    return get_input(str, "Please enter the complete path to your save file: \n")
 
 
 def state_auto_discover_saves():
@@ -126,13 +130,19 @@ def state_auto_discover_saves():
         )
         return get_input(str, get_prompt_msg())
     if success:
-        print(f"Save files were discovered at {path}")
+        print(f"Default save path exists at {path}")
         parsed_saves = parse_saves(path)
-        parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
-        print("Which save file would you like to modify: ")
-        pprint_dict(parsed_saves_int_map)
-        choice = get_input(int)
-        return parsed_saves[parsed_saves_int_map[choice]]
+        if parsed_saves:
+            parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
+            print("Which save file would you like to modify: ")
+            pprint_dict(parsed_saves_int_map)
+            choice = get_input(int)
+            return parsed_saves[parsed_saves_int_map[choice]]
+        else:
+            print(
+                "The save folder exists in the default location but no save files were discovered"
+            )
+            state_exit()
 
 
 def state_edit_doors(save_state: SaveState):
@@ -232,21 +242,102 @@ def state_options_edit(previous_state):
             return previous_state
 
 
+def state_auto_discover_backups():
+    success, path = auto_discover()
+    if not success:
+        print(
+            "Unable to discover backup files. Please enter a path to the root of your backup folder manually."
+        )
+        return get_input(str, get_prompt_msg())
+    if success:
+        discovered_backups = discover_baks(path)
+        if discovered_backups:
+            discovered_backups_int_map = {
+                i: k for i, k in enumerate(discovered_backups.keys())
+            }
+            print("Which backup file would you like to restore: ")
+            pprint_dict(discovered_backups_int_map)
+            choice = get_input(int)
+            return discovered_backups[discovered_backups_int_map[choice]]
+        else:
+            print(
+                "The save folder exists in the default location but no backups were discovered"
+            )
+            state_exit()
+
+
+def state_manual_backup():
+    return get_input(str, "Please enter the complete path to your backup file: \n")
+
+
 def state_options_restore(previous_state):
     print(OPTIONS_RESTORE)
     choice = get_input(int, get_prompt_msg())
     assert choice in [1, 2, 3]
     match choice:
         case 1:
-            pass
+            return STATES.OPTIONS_RESTORE_AUTO_DISCOVER_BACKUPS
         case 2:
-            pass
+            return STATES.OPTIONS_RESTORE_MANUAL_BACKUP
         case 3:
-            pass
+            return previous_state
 
 
 def main():
-    pass
+    current_state = STATES.OPTIONS_START
+    next_state = state_start()
+    while True:
+        match next_state:
+            case STATES.OPTIONS_START:
+                previous_state = current_state
+                current_state = next_state
+                next_state = state_start(False)
+            case STATES.OPTIONS_EDIT_START:
+                previous_state = current_state
+                current_state = next_state
+                next_state = state_options_edit_start(previous_state)
+            case STATES.OPTIONS_EDIT_AUTO_DISCOVER_SAVES:
+                previous_state = current_state
+                current_state = next_state
+                save_path = state_auto_discover_saves()
+                save_state = SaveState(save_path)
+                next_state = STATES.OPTIONS_EDIT
+            case STATES.OPTIONS_EDIT_MANUAL_SAVE:
+                previous_state = current_state
+                current_state = next_state
+                save_path = state_manual_save()
+                save_state = SaveState(save_path)
+                next_state = STATES.OPTIONS_EDIT
+            case STATES.OPTIONS_RESTORE:
+                previous_state = current_state
+                current_state = next_state
+                next_state = state_options_restore(previous_state)
+            case STATES.OPTIONS_RESTORE_AUTO_DISCOVER_BACKUPS:
+                previous_state = current_state
+                current_state = next_state
+                backup_path = state_auto_discover_backups()
+                restore_save(backup_path)
+                print("Backup was restored.")
+                next_state = STATES.OPTIONS_START
+            case STATES.OPTIONS_RESTORE_MANUAL_BACKUP:
+                previous_state = current_state
+                current_state = next_state
+                backup_path = state_manual_backup()
+                restore_save(backup_path)
+                print("Backup was restored.")
+                next_state = STATES.OPTIONS_START
+            case STATES.OPTIONS_EDIT_DOORS:
+                pass
+            case STATES.OPTIONS_EDIT_TIME:
+                pass
+            case STATES.OPTIONS_EDIT_RESOURCE:
+                pass
+            case STATES.OPTIONS_EDIT_THOUGHTS:
+                pass
+            case STATES.OPTIONS_EDIT_ROLLBACK:
+                pass
+            case STATES.OPTIONS_EDIT_COMMIT:
+                pass
 
 
 if __name__ == "__main__":
