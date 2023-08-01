@@ -67,7 +67,7 @@ WELCOME = (
     + "\n[Conceptualization (Impossible): Failure]"
     + Fore.RESET
     + "\n\tAre you living in a simulation? Are you in this ... 'game'? You shake away the thought before anything concrete starts to form."
-    + Fore.RED
+    + Fore.GREEN
     + "\n[Perception (Trivial): Success]"
     + Fore.RESET
     + "\n\tThe options are displayed for you on the small screen:\n"
