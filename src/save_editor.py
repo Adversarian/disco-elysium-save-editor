@@ -64,7 +64,7 @@ OPTIONS_EDIT = (
     "3. Set value for a resource.\n"
     "4. Set all unknown thoughts as known (so you can internalize any of them).\n"
     "5. Rollback current modifications.\n"
-    "6. Commit current modifications.\n"
+    "6. Commit current modifications to disk.\n"
     "7. [GO BACK]\n"
 )
 
@@ -126,11 +126,11 @@ def state_auto_discover_saves():
     success, path = auto_discover()
     if not success:
         print(
-            "Unable to discover save files. Please enter a path to the root of your save folder manually."
+            "[-] Unable to discover save files. Please enter a path to the root of your save folder manually."
         )
         return get_input(str, get_prompt_msg())
     if success:
-        print(f"Default save path exists at {path}")
+        print(f"[+] Default save path exists at {path}")
         parsed_saves = parse_saves(path)
         if parsed_saves:
             parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
@@ -140,7 +140,7 @@ def state_auto_discover_saves():
             return parsed_saves[parsed_saves_int_map[choice]]
         else:
             print(
-                "The save folder exists in the default location but no save files were discovered"
+                "[-] The save folder exists in the default location but no save files were discovered"
             )
             state_exit()
 
@@ -214,7 +214,7 @@ def state_edit_resource(save_state: SaveState):
 
 def state_edit_thoughts():
     print(
-        "This will change the state of all *forgotten* and *unknown* thoughts to *known*, allowing you to internalize them as you like. Would you like to proceed(Yes/No)?"
+        "[!] This will change the state of all *forgotten* and *unknown* thoughts to *known*, allowing you to internalize them as you like. Would you like to proceed(Yes/No)?"
     )
     choice = get_input(str, get_prompt_msg())
     assert choice.lower() in ["yes", "no"]
@@ -246,7 +246,7 @@ def state_auto_discover_backups():
     success, path = auto_discover()
     if not success:
         print(
-            "Unable to discover backup files. Please enter a path to the root of your backup folder manually."
+            "[-] Unable to discover backup files. Please enter a path to the root of your backup folder manually."
         )
         return get_input(str, get_prompt_msg())
     if success:
@@ -261,7 +261,7 @@ def state_auto_discover_backups():
             return discovered_backups[discovered_backups_int_map[choice]]
         else:
             print(
-                "The save folder exists in the default location but no backups were discovered"
+                "[-] The save folder exists in the default location but no backups were discovered"
             )
             state_exit()
 
@@ -301,12 +301,14 @@ def main():
                 current_state = next_state
                 save_path = state_auto_discover_saves()
                 save_state = SaveState(save_path)
+                print("[+] Save state loaded.")
                 next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_EDIT_MANUAL_SAVE:
                 previous_state = current_state
                 current_state = next_state
                 save_path = state_manual_save()
                 save_state = SaveState(save_path)
+                print("[+] Save state loaded.")
                 next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_RESTORE:
                 previous_state = current_state
@@ -317,27 +319,59 @@ def main():
                 current_state = next_state
                 backup_path = state_auto_discover_backups()
                 restore_save(backup_path)
-                print("Backup was restored.")
+                print("[+] Backup was restored.")
                 next_state = STATES.OPTIONS_START
             case STATES.OPTIONS_RESTORE_MANUAL_BACKUP:
                 previous_state = current_state
                 current_state = next_state
                 backup_path = state_manual_backup()
                 restore_save(backup_path)
-                print("Backup was restored.")
+                print("[+] Backup was restored.")
                 next_state = STATES.OPTIONS_START
+            case STATES.OPTIONS_EDIT:
+                previous_state = current_state
+                current_state = next_state
+                next_state = state_options_edit(previous_state)
             case STATES.OPTIONS_EDIT_DOORS:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                key, value = state_edit_doors(save_state)
+                save_state.set_door(key, value)
+                print("[+] Door state set.")
+                next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_EDIT_TIME:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                key, value = state_edit_time(save_state)
+                save_state.set_time(key, value)
+                print("[+] Time value set.")
+                next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_EDIT_RESOURCE:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                key, value = state_edit_resource(save_state)
+                save_state.set_resource(key, value)
+                print("[+] Resource value set.")
+                next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_EDIT_THOUGHTS:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                if state_edit_thoughts():
+                    save_state.set_all_unknown_and_forgotten_thoughts()
+                    print("[+] All unknown and forgotten thought states set.")
+                next_state = STATES.OPTIONS_EDIT
             case STATES.OPTIONS_EDIT_ROLLBACK:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                save_state.rollback()
+                print("[+] All changes rolled back.")
+                next_state = STATES.OPTIONS_START
             case STATES.OPTIONS_EDIT_COMMIT:
-                pass
+                previous_state = current_state
+                current_state = next_state
+                save_state.commit()
+                print("[+] All changes committed to disk.")
+                next_state = STATES.OPTIONS_START
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import operator
-from src.utils import *
 from functools import reduce
+
+from src.utils import *
 
 MAPS = {
     "Doors": {
@@ -84,7 +85,7 @@ class SaveState:
         map = MAPS["Resources"]["common_ancestor"] + MAPS["Resources"][key]
         return get_from_dict(self._save_state, map)
 
-    def set_all_unknown_thoughts(self):
+    def set_all_unknown_and_forgotten_thoughts(self):
         map_root = MAPS["All Thoughts"]["map"]
         thoughts_list = get_from_dict(self._save_state, map_root)
         for thought in thoughts_list:
