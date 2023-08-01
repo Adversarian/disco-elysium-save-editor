@@ -1,7 +1,7 @@
 import operator
 from functools import reduce
 
-from src.utils import *
+from utils import *
 
 MAPS = {
     "Doors": {
