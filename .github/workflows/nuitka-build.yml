@@ -31,11 +31,10 @@ jobs:
           script-name: src/save_editor.py
           onefile: true
           windows-icon-from-ico: assets/save.png
-          product-name: Disco Elysium Save Editor
-          product-version: "1.0.0"
-          file-description: A Save Editor for Disco Elysium
-          company-name: Arian Tashakkor
-          output-filename: DESE
+          windows-product-name: Disco Elysium Save Editor
+          windows-product-version: "1.0.0"
+          windows-file-description: A Save Editor for Disco Elysium
+          output-file: DESE
 
           
       # Uploads artifact

@@ -1,3 +1,2 @@
-nuitka
 colorama
 imageio
