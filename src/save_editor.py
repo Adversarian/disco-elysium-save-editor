@@ -1,4 +1,5 @@
 import random
+import sys
 from enum import Enum
 
 from colorama import Fore, just_fix_windows_console
@@ -163,13 +164,13 @@ def get_input(cast_as=str, msg=""):
 
 def state_exit():
     get_input(str, "Press Enter to continue ...")
-    exit(0)
+    sys.exit(0)
 
 
 def state_start(first_time=True):
     if first_time:
         print(DISCLAIMER)
-    print(WELCOME)
+        print(WELCOME)
     print(OPTIONS_START)
     choice = get_input(int, get_prompt_msg())
     assert choice in [1, 2, 3]
@@ -210,13 +211,13 @@ def state_auto_discover_saves():
         )
         return get_input(str, get_prompt_msg())
     if success:
-        print(Fore.GREEN + f"[+] Default save path exists at {path}" + Fore.RESET)
+        print(Fore.GREEN + f"[+]" + Fore.RESET + " Default save path exists at {path}")
         parsed_saves = parse_saves(path)
         if parsed_saves:
             parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
-            print("Which save file would you like to modify: ")
+            print("These are your save files:")
             pprint_dict(parsed_saves_int_map)
-            choice = get_input(int)
+            choice = get_input(int, "Which one would you like to modify: ")
             return parsed_saves[parsed_saves_int_map[choice]]
         else:
             print(
@@ -231,20 +232,21 @@ def state_auto_discover_saves():
 def state_edit_doors(save_state: SaveState):
     print("These are the doors whose in-game states can be altered: " + Fore.YELLOW)
     doors_int_map = {
-        i: k
-        for i, k in enumerate(MAPS["Doors"])
-        if MAPS["Doors"][k] not in ["common_ancestor", "map"]
+        i: k for i, k in enumerate(MAPS["Doors"]) if k not in ["common_ancestor", "map"]
     }
     pprint_dict(doors_int_map)
     print(Fore.RESET)
     choice = get_input(int, "Which door would you like to modify (Case SENSITIVE): ")
-    key = MAPS["Doors"][doors_int_map[choice]]
+    key = doors_int_map[choice]
     current_door_state = save_state.get_door(key)
     choice = get_input(
         str,
         (
-            f"The current state of the door is *{'Open' if current_door_state else 'Closed'}*."
-            "What would you like to change it to (Open/Closed case insensitive): ",
+            "The current state of the door is "
+            + Fore.RED
+            + f"{'Open' if current_door_state else 'Closed'}"
+            + Fore.RESET
+            + ". What would you like to change it to (Open/Closed case insensitive): ",
         ),
     )
     assert choice.lower() in ["open", "closed"]
@@ -253,13 +255,16 @@ def state_edit_doors(save_state: SaveState):
 
 
 def state_edit_time(save_state: SaveState):
-    key = "Minutes passed in Day"  # FC
+    key = "Minutes Passed in Day"  # FC
     current_time_state = save_state.get_time(key)
     value = get_input(
         str,
         (
-            f"The current time of day is *{current_time_state}*."
-            "What would you like to change it to (formulate your input as hh:mm time, e.g. 04:20): "
+            "The current time of day is "
+            + Fore.RED
+            + f"{current_time_state}"
+            + Fore.RESET
+            + ". What would you like to change it to (formulate your input as hh:mm time, e.g. 04:20): "
         ),
     )
     # TODO: error handling
@@ -271,7 +276,7 @@ def state_edit_resource(save_state: SaveState):
     resources_int_map = {
         i: k
         for i, k in enumerate(MAPS["Resources"])
-        if MAPS["Resources"][k] not in ["common_ancestor", "map"]
+        if k not in ["common_ancestor", "map"]
     }
     pprint_dict(resources_int_map)
     print(Fore.RESET)
@@ -279,20 +284,26 @@ def state_edit_resource(save_state: SaveState):
         int, "Which resource would you like to modify (Case SENSITIVE): "
     )
     flag_money = resources_int_map[choice] == "Money"
-    key = MAPS["Resources"][resources_int_map[choice]]
+    key = resources_int_map[choice]
     current_resource_state = save_state.get_resource(key)
     if flag_money:
-        current_resource_state = float(current_resource_state) / 10
+        current_resource_state = float(current_resource_state) / 100
         value = get_input(
             float,
-            f"The current value of this resource is *{current_resource_state}*."
-            "What would you like to change it to (please enter a floating point number with at most 2 decimals, e.g. 132.50): ",
+            "The current value of this resource is "
+            + Fore.RED
+            + f"{current_resource_state}"
+            + Fore.RESET
+            + ". What would you like to change it to (please enter a floating point number with at most 2 decimals, e.g. 132.50): ",
         )
     else:
         value = get_input(
             int,
-            f"The current value of this resource is *{current_resource_state}*."
-            "What would you like to change it to (please enter an integer): ",
+            f"The current value of this resource is "
+            + Fore.RED
+            + f"{current_resource_state}"
+            + Fore.RESET
+            + ". What would you like to change it to (please enter an integer): ",
         )
     return key, value
 
@@ -346,9 +357,9 @@ def state_auto_discover_backups():
             discovered_backups_int_map = {
                 i: k for i, k in enumerate(discovered_backups.keys())
             }
-            print("Which backup file would you like to restore: ")
+            print("These are your backups:")
             pprint_dict(discovered_backups_int_map)
-            choice = get_input(int)
+            choice = get_input(int, "Which backup file would you like to restore: ")
             return discovered_backups[discovered_backups_int_map[choice]]
         else:
             print(
@@ -378,101 +389,98 @@ def state_options_restore(previous_state):
 
 
 def main():
-    current_state = STATES.OPTIONS_START
-    next_state = state_start()
-    while True:
-        match next_state:
-            case STATES.OPTIONS_START:
-                previous_state = current_state
-                current_state = next_state
-                next_state = state_start(False)
-            case STATES.OPTIONS_EDIT_START:
-                previous_state = current_state
-                current_state = next_state
-                next_state = state_options_edit_start(previous_state)
-            case STATES.OPTIONS_EDIT_AUTO_DISCOVER_SAVES:
-                previous_state = current_state
-                current_state = next_state
-                save_path = state_auto_discover_saves()
-                save_state = SaveState(save_path)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Save state loaded.")
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_EDIT_MANUAL_SAVE:
-                previous_state = current_state
-                current_state = next_state
-                save_path = state_manual_save()
-                save_state = SaveState(save_path)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Save state loaded.")
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_RESTORE:
-                previous_state = current_state
-                current_state = next_state
-                next_state = state_options_restore(previous_state)
-            case STATES.OPTIONS_RESTORE_AUTO_DISCOVER_BACKUPS:
-                previous_state = current_state
-                current_state = next_state
-                backup_path = state_auto_discover_backups()
-                restore_save(backup_path)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Backup was restored.")
-                next_state = STATES.OPTIONS_START
-            case STATES.OPTIONS_RESTORE_MANUAL_BACKUP:
-                previous_state = current_state
-                current_state = next_state
-                backup_path = state_manual_backup()
-                restore_save(backup_path)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Backup was restored.")
-                next_state = STATES.OPTIONS_START
-            case STATES.OPTIONS_EDIT:
-                previous_state = current_state
-                current_state = next_state
-                next_state = state_options_edit(previous_state)
-            case STATES.OPTIONS_EDIT_DOORS:
-                previous_state = current_state
-                current_state = next_state
-                key, value = state_edit_doors(save_state)
-                save_state.set_door(key, value)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Door state set.")
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_EDIT_TIME:
-                previous_state = current_state
-                current_state = next_state
-                key, value = state_edit_time(save_state)
-                save_state.set_time(key, value)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Time value set.")
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_EDIT_RESOURCE:
-                previous_state = current_state
-                current_state = next_state
-                key, value = state_edit_resource(save_state)
-                save_state.set_resource(key, value)
-                print(Fore.GREEN + "[+]" + Fore.RESET + " Resource value set.")
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_EDIT_THOUGHTS:
-                previous_state = current_state
-                current_state = next_state
-                if state_edit_thoughts():
-                    save_state.set_all_unknown_and_forgotten_thoughts()
+    save_state = None
+    try:
+        next_state = state_start()
+        while True:
+            match next_state:
+                case STATES.OPTIONS_START:
+                    previous_state = STATES.OPTIONS_START
+                    next_state = state_start(False)
+                case STATES.OPTIONS_EDIT_START:
+                    previous_state = STATES.OPTIONS_START
+                    next_state = state_options_edit_start(previous_state)
+                case STATES.OPTIONS_EDIT_AUTO_DISCOVER_SAVES:
+                    previous_state = STATES.OPTIONS_EDIT_START
+                    save_path = state_auto_discover_saves()
+                    save_state = SaveState(save_path)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Save state loaded.")
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_MANUAL_SAVE:
+                    previous_state = STATES.OPTIONS_EDIT_START
+                    save_path = state_manual_save()
+                    save_state = SaveState(save_path)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Save state loaded.")
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_RESTORE:
+                    previous_state = STATES.OPTIONS_START
+                    next_state = state_options_restore(previous_state)
+                case STATES.OPTIONS_RESTORE_AUTO_DISCOVER_BACKUPS:
+                    previous_state = STATES.OPTIONS_RESTORE
+                    backup_path = state_auto_discover_backups()
+                    restore_save(backup_path)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Backup was restored.")
+                    next_state = STATES.OPTIONS_START
+                case STATES.OPTIONS_RESTORE_MANUAL_BACKUP:
+                    previous_state = STATES.OPTIONS_RESTORE
+                    backup_path = state_manual_backup()
+                    restore_save(backup_path)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Backup was restored.")
+                    next_state = STATES.OPTIONS_START
+                case STATES.OPTIONS_EDIT:
+                    previous_state = STATES.OPTIONS_EDIT_START
+                    next_state = state_options_edit(previous_state)
+                    if next_state == previous_state:
+                        save_state.rollback()
+                        del save_state
+                case STATES.OPTIONS_EDIT_DOORS:
+                    previous_state = STATES.OPTIONS_EDIT
+                    key, value = state_edit_doors(save_state)
+                    save_state.set_door(key, value)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Door state set.")
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_TIME:
+                    previous_state = STATES.OPTIONS_EDIT
+                    key, value = state_edit_time(save_state)
+                    save_state.set_time(key, value)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Time value set.")
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_RESOURCE:
+                    previous_state = STATES.OPTIONS_EDIT
+                    key, value = state_edit_resource(save_state)
+                    save_state.set_resource(key, value)
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " Resource value set.")
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_THOUGHTS:
+                    previous_state = STATES.OPTIONS_EDIT
+                    if state_edit_thoughts():
+                        save_state.set_all_unknown_and_forgotten_thoughts()
+                        print(
+                            Fore.GREEN
+                            + "[+]"
+                            + Fore.RESET
+                            + " All unknown and forgotten thought states set."
+                        )
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_ROLLBACK:
+                    previous_state = STATES.OPTIONS_EDIT
+                    save_state.rollback()
+                    print(Fore.GREEN + "[+]" + Fore.RESET + " All changes rolled back.")
+                    next_state = STATES.OPTIONS_START
+                case STATES.OPTIONS_EDIT_COMMIT:
+                    previous_state = STATES.OPTIONS_EDIT
+                    save_state.commit()
                     print(
                         Fore.GREEN
                         + "[+]"
                         + Fore.RESET
-                        + " All unknown and forgotten thought states set."
+                        + " All changes committed to disk."
                     )
-                next_state = STATES.OPTIONS_EDIT
-            case STATES.OPTIONS_EDIT_ROLLBACK:
-                previous_state = current_state
-                current_state = next_state
-                save_state.rollback()
-                print(Fore.GREEN + "[+]" + Fore.RESET + " All changes rolled back.")
-                next_state = STATES.OPTIONS_START
-            case STATES.OPTIONS_EDIT_COMMIT:
-                previous_state = current_state
-                current_state = next_state
-                save_state.commit()
-                print(
-                    Fore.GREEN + "[+]" + Fore.RESET + " All changes committed to disk."
-                )
-                next_state = STATES.OPTIONS_START
+                    next_state = STATES.OPTIONS_START
+    except (KeyboardInterrupt, Exception):
+        if save_state is not None:
+            save_state.rollback()
+        raise
 
 
 if __name__ == "__main__":

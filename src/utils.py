@@ -23,7 +23,8 @@ def parse_saves(save_path_root: str) -> dict:
 
 def backup_save(save_path: str) -> str:
     assert os.path.exists(save_path)
-    os.rename(rf"{save_path}", rf"{save_path}.bak")
+    if not os.path.exists(rf"{save_path}.bak"):
+        os.rename(rf"{save_path}", rf"{save_path}.bak")
     return rf"{save_path}.bak"
 
 
@@ -66,7 +67,7 @@ def zip_save(save_path: str, cleanup: bool = True):
     with ZipFile(save_path, "w", ZIP_DEFLATED) as save:
         files = glob(rf"{tmp_dir}\*")
         for file in files:
-            save.write(file)
+            save.write(file, arcname=file.split("\\")[-1])
     if cleanup:
         shutil.rmtree(tmp_dir)
 
