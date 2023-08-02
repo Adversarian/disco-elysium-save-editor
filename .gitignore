@@ -162,4 +162,3 @@ cython_debug/
 # Nuitka
 save_editor*/
 DESE.exe
-nuitka-build
