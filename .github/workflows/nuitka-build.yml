@@ -39,8 +39,9 @@ jobs:
 
           
       # Uploads artifact
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+      - name: upload binaries to release
+        uses: softprops/action-gh-release@v1
+        if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           name: ${{ runner.os }} Build
-          path: build/DESE.exe
+          files: build/DESE.exe
