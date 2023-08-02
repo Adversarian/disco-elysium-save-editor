@@ -40,9 +40,10 @@ jobs:
 
           
       # Uploads artifact
-      - name: Upload Artifact
-        uses: skx/github-action-publish-binaries@master
+      - name: Upload Release Artifacts
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "build/DESE.exe"
+          files: build/DESE.exe
