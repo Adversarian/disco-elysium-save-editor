@@ -38,12 +38,19 @@ MAPS = {
         "forgotten_state": "FORGOTTEN",
     },
     "Character Sheet": {
-        "Intellect": "intellect",
-        "Psyche": "psyche",
-        "Physique": "fysique",
-        "Motorics": "motorics",
-        "common_ancestor": "characterSheet",
-        "map": ["value", "valueWithoutPerceptionSubSkills", "maximumValue"],
+        "Intellect": ["intellect"],
+        "Psyche": ["psyche"],
+        "Physique": ["fysique"],
+        "Motorics": ["motorics"],
+        "common_ancestor": ["characterSheet"],
+        "map": ["value", "valueWithoutPerceptionsSubSkills", "maximumValue"],
+    },
+    "char_sheet_ability_modifiers": {
+        "Intellect": ["INT", 0, "amount"],
+        "Psyche": ["PSY", 0, "amount"],
+        "Physique": ["FYS", 0, "amount"],
+        "Motorics": ["MOT", 0, "amount"],
+        "common_ancestor": ["characterSheet", "AbilityModifierCauseMap"],
     },
 }
 
@@ -109,7 +116,7 @@ class SaveState:
         map = (
             MAPS["Character Sheet"]["common_ancestor"]
             + MAPS["Character Sheet"][key]
-            + MAPS["Character Sheet"]["map"][0]
+            + [MAPS["Character Sheet"]["map"][0]]
         )
         return get_from_dict(self._save_state, map)
 
@@ -119,6 +126,11 @@ class SaveState:
         for edit in MAPS["Character Sheet"]["map"]:
             stat[edit] = value
         set_in_dict(self._save_state, map, stat)
+        map = (
+            MAPS["char_sheet_ability_modifiers"]["common_ancestor"]
+            + MAPS["char_sheet_ability_modifiers"][key]
+        )
+        set_in_dict(self._save_state, map, value)
 
     def commit(self, **kwargs):
         write_save_state(self._save_state, self._save_state_path)
