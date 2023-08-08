@@ -4,7 +4,8 @@ A fairly easy Logic check should reveal the function of this repository from its
 This tool provides facilities for altering the following:
 - ~~Your mind~~
 - **Door States**: Open or close locked doors.
-- **Resource Values**: Skill points, Health consumables, Morale consumables, Money (and more to come soon™! Maybe.)
+- **Resource Values**: Skill points, Health consumables, Morale consumables, Money.
+- **Character Sheet Stats**: Intellect, Psyche, Physique and Motorics caps and base stats.
 - **Thoughts**: Change the state of all *unknown* and *forgotten* thoughts to *known*, ready to be internalized.
 - **In-game Time**: Change the in-game time.
 
