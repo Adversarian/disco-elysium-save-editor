@@ -37,6 +37,14 @@ MAPS = {
         "learning_state": "COOKING",
         "forgotten_state": "FORGOTTEN",
     },
+    "Character Sheet": {
+        "Intellect": "intellect",
+        "Psyche": "psyche",
+        "Physique": "fysique",
+        "Motorics": "motorics",
+        "common_ancestor": "characterSheet",
+        "map": ["value", "valueWithoutPerceptionSubSkills", "maximumValue"],
+    },
 }
 
 
@@ -95,6 +103,22 @@ class SaveState:
             ]:
                 thought["state"] = MAPS["All Thoughts"]["known_state"]
         set_in_dict(self._save_state, map_root, thoughts_list)
+        self._save_state["characterSheet"]["forgottenThoughts"] = []
+
+    def get_char_sheet_stat(self, key: str) -> int:
+        map = (
+            MAPS["Character Sheet"]["common_ancestor"]
+            + MAPS["Character Sheet"][key]
+            + MAPS["Character Sheet"]["map"][0]
+        )
+        return get_from_dict(self._save_state, map)
+
+    def set_char_sheet_stat(self, key: str, value: int):
+        map = MAPS["Character Sheet"]["common_ancestor"] + MAPS["Character Sheet"][key]
+        stat = get_from_dict(self._save_state, map)
+        for edit in MAPS["Character Sheet"]["map"]:
+            stat[edit] = value
+        set_in_dict(self._save_state, map, stat)
 
     def commit(self, **kwargs):
         write_save_state(self._save_state, self._save_state_path)

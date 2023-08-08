@@ -20,6 +20,7 @@ STATES = Enum(
         "OPTIONS_EDIT_DOORS",
         "OPTIONS_EDIT_TIME",
         "OPTIONS_EDIT_RESOURCE",
+        "OPTIONS_EDIT_CHAR_SHEET",
         "OPTIONS_EDIT_THOUGHTS",
         "OPTIONS_EDIT_ROLLBACK",
         "OPTIONS_EDIT_COMMIT",
@@ -126,13 +127,17 @@ OPTIONS_EDIT = (
     + Fore.YELLOW
     + "5."
     + Fore.RESET
-    + " Rollback current modifications.\n"
+    + " Set value for a stat in the character sheet.\n"
     + Fore.YELLOW
     + "6."
     + Fore.RESET
-    + " Commit current modifications to disk.\n"
+    + " Rollback current modifications.\n"
     + Fore.YELLOW
     + "7."
+    + Fore.RESET
+    + " Commit current modifications to disk.\n"
+    + Fore.YELLOW
+    + "8."
     + Fore.RESET
     + " [GO BACK]\n"
 )
@@ -308,6 +313,32 @@ def state_edit_resource(save_state: SaveState):
     return key, value
 
 
+def state_edit_char_sheet(save_state: SaveState):
+    print(
+        "These are the stats from the character sheet whose values you can edit:"
+        + Fore.YELLOW
+    )
+    char_sheet_int_map = {
+        i: k
+        for i, k in enumerate(MAPS["Character Sheet"])
+        if k not in ["common_ancestor", "map"]
+    }
+    pprint_dict(char_sheet_int_map)
+    print(Fore.RESET)
+    choice = get_input(int, "Which stat would you like to modify (Case SENSITIVE): ")
+    key = char_sheet_int_map[choice]
+    current_stat_value = save_state.get_char_sheet_stat(key)
+    value = get_input(
+        int,
+        f"The current value of this resource is "
+        + Fore.RED
+        + f"{current_stat_value}"
+        + Fore.RESET
+        + ". What would you like to change it to (please enter an integer): ",
+    )
+    return key, value
+
+
 def state_edit_thoughts():
     print(
         Fore.CYAN
@@ -323,7 +354,7 @@ def state_edit_thoughts():
 def state_options_edit(previous_state):
     print(OPTIONS_EDIT)
     choice = get_input(int, get_prompt_msg())
-    assert choice in [1, 2, 3, 4, 5, 6, 7]
+    assert choice in [1, 2, 3, 4, 5, 6, 7, 8]
     match choice:
         case 1:
             return STATES.OPTIONS_EDIT_DOORS
@@ -334,10 +365,12 @@ def state_options_edit(previous_state):
         case 4:
             return STATES.OPTIONS_EDIT_THOUGHTS
         case 5:
-            return STATES.OPTIONS_EDIT_ROLLBACK
+            return STATES.OPTIONS_EDIT_CHAR_SHEET
         case 6:
-            return STATES.OPTIONS_EDIT_COMMIT
+            return STATES.OPTIONS_EDIT_ROLLBACK
         case 7:
+            return STATES.OPTIONS_EDIT_COMMIT
+        case 8:
             return previous_state
 
 
@@ -461,6 +494,14 @@ def main():
                             + Fore.RESET
                             + " All unknown and forgotten thought states set."
                         )
+                    next_state = STATES.OPTIONS_EDIT
+                case STATES.OPTIONS_EDIT_CHAR_SHEET:
+                    previous_state = STATES.OPTIONS_EDIT
+                    key, value = state_edit_char_sheet(save_state)
+                    save_state.set_char_sheet_stat(key, value)
+                    print(
+                        Fore.GREEN + "[+]" + Fore.RESET + " Character sheet stat set."
+                    )
                     next_state = STATES.OPTIONS_EDIT
                 case STATES.OPTIONS_EDIT_ROLLBACK:
                     previous_state = STATES.OPTIONS_EDIT
