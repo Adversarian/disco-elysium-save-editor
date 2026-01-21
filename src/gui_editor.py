@@ -402,11 +402,6 @@ class DiscoElysiumSaveEditor(QMainWindow):
         self.setWindowTitle("DISCO ELYSIUM - Save State Editor")
         self.setGeometry(100, 100, 1400, 850)
 
-        # Set window icon
-        icon_path = Path(__file__).parent.parent / "assets" / "save.png"
-        if icon_path.exists():
-            self.setWindowIcon(QIcon(str(icon_path)))
-
         # State management
         self.save_state: Optional[SaveState] = None
         self.current_save_path: Optional[str] = None
@@ -1125,6 +1120,20 @@ class DiscoElysiumSaveEditor(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+
+    # Set application icon (for taskbar and window)
+    # Try multiple paths for development vs compiled executable
+    icon_paths = [
+        Path(__file__).parent.parent / "assets" / "save.png",  # Running from src/
+        Path(sys.executable).parent / "assets" / "save.png",   # Nuitka compiled
+        Path.cwd() / "assets" / "save.png",                    # Current directory
+    ]
+
+    for icon_path in icon_paths:
+        if icon_path.exists():
+            icon = QIcon(str(icon_path))
+            app.setWindowIcon(icon)  # Set globally for taskbar
+            break
 
     # Set default font
     font = QFont("Book Antiqua", 10)
