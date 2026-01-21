@@ -17,9 +17,8 @@ from io import BytesIO
 sys.path.append(str(Path(__file__).parent))
 from edits import SaveState, MAPS
 from utils import auto_discover, parse_saves, discover_baks, restore_save
-
-# Path to assets
-ASSETS_DIR = Path(__file__).parent.parent / "assets" / "textures" / "paper_by_darkwood67"
+from assets import EMBEDDED_TEXTURES, EMBEDDED_ICON
+import base64
 
 # Disco Elysium Authentic Color Palette
 DE_COLORS = {
@@ -58,22 +57,14 @@ class TextureManager:
         self.create_tinted_textures()
 
     def load_textures(self):
-        """Load all base paper textures"""
-        texture_files = {
-            "vintage": "vintage_paper_by_darkwood67.jpg",
-            "old": "old_paper_by_darkwood67.jpg",
-            "brown_age": "brown_age_by_darkwood67.jpg",
-            "brown_ice": "brown_ice_by_darkwood67.jpg"
-        }
-
-        for name, filename in texture_files.items():
+        """Load all base paper textures from embedded base64 data"""
+        for name, b64_data in EMBEDDED_TEXTURES.items():
             try:
-                texture_path = ASSETS_DIR / filename
-                if texture_path.exists():
-                    img = Image.open(texture_path)
-                    # Use larger tiles for better stretch effect (less visible tiling)
-                    img = img.resize((800, 800), Image.Resampling.LANCZOS)
-                    self.base_textures[name] = img
+                # Decode base64 and load image
+                img_data = base64.b64decode(b64_data)
+                img = Image.open(BytesIO(img_data))
+                # Images are already 800x800 from the embedding process
+                self.base_textures[name] = img
             except Exception as e:
                 print(f"Could not load texture {name}: {e}")
 
@@ -1121,19 +1112,15 @@ class DiscoElysiumSaveEditor(QMainWindow):
 def main():
     app = QApplication(sys.argv)
 
-    # Set application icon (for taskbar and window)
-    # Try multiple paths for development vs compiled executable
-    icon_paths = [
-        Path(__file__).parent.parent / "assets" / "save.png",  # Running from src/
-        Path(sys.executable).parent / "assets" / "save.png",   # Nuitka compiled
-        Path.cwd() / "assets" / "save.png",                    # Current directory
-    ]
-
-    for icon_path in icon_paths:
-        if icon_path.exists():
-            icon = QIcon(str(icon_path))
-            app.setWindowIcon(icon)  # Set globally for taskbar
-            break
+    # Set application icon from embedded base64 data
+    try:
+        icon_data = base64.b64decode(EMBEDDED_ICON)
+        pixmap = QPixmap()
+        pixmap.loadFromData(icon_data)
+        icon = QIcon(pixmap)
+        app.setWindowIcon(icon)
+    except Exception as e:
+        print(f"Could not load embedded icon: {e}")
 
     # Set default font
     font = QFont("Book Antiqua", 10)

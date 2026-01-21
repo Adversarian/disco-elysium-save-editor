@@ -6,7 +6,6 @@ nuitka `
     --enable-plugin=pyqt6 `
     --windows-disable-console `
     --windows-icon-from-ico="assets\save.png" `
-    --include-data-dir="assets=assets" `
     --product-name="Disco Elysium Save Editor" `
     --product-version="1.0.0" `
     --file-version="1.0.0.0" `
