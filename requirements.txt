@@ -1,2 +1,4 @@
 colorama
 imageio
+PyQt6
+Pillow
