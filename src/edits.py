@@ -59,8 +59,24 @@ def get_from_dict(dict: dict, map: list):
     return reduce(operator.getitem, map, dict)
 
 
+def get_from_dict_safe(dict: dict, map: list, default=None):
+    """Safely get value from nested dict, returning default if key doesn't exist"""
+    try:
+        return reduce(operator.getitem, map, dict)
+    except (KeyError, TypeError):
+        return default
+
+
 def set_in_dict(dict: dict, map: list, value):
-    get_from_dict(dict, map[:-1])[map[-1]] = value
+    """Set value in nested dict, creating intermediate dicts if needed"""
+    # Navigate to parent, creating dicts as needed
+    current = dict
+    for key in map[:-1]:
+        if key not in current:
+            current[key] = {}
+        current = current[key]
+    # Set the final value
+    current[map[-1]] = value
 
 
 class SaveState:
@@ -76,7 +92,8 @@ class SaveState:
 
     def get_door(self, key: str) -> bool:
         map = MAPS["Doors"]["common_ancestor"] + MAPS["Doors"][key]
-        return get_from_dict(self._save_state, map)
+        # Return False if door doesn't exist yet (not encountered in game)
+        return get_from_dict_safe(self._save_state, map, default=False)
 
     def set_time(self, key: str = "Minutes Passed in Day", value: str = "04:20"):
         hours, minutes = value.split(":")
@@ -86,7 +103,7 @@ class SaveState:
 
     def get_time(self, key: str = "Minutes Passed in Day") -> str:
         map = MAPS["Time"]["common_ancestor"] + MAPS["Time"][key]
-        total_minutes = get_from_dict(self._save_state, map)
+        total_minutes = get_from_dict_safe(self._save_state, map, default=0)
         hours, minutes = total_minutes // 60, total_minutes % 60
         return f"{hours}:{minutes}"
 
@@ -98,19 +115,23 @@ class SaveState:
 
     def get_resource(self, key: str) -> int:
         map = MAPS["Resources"]["common_ancestor"] + MAPS["Resources"][key]
-        return get_from_dict(self._save_state, map)
+        return get_from_dict_safe(self._save_state, map, default=0)
 
     def set_all_unknown_and_forgotten_thoughts(self):
         map_root = MAPS["All Thoughts"]["map"]
-        thoughts_list = get_from_dict(self._save_state, map_root)
+        thoughts_list = get_from_dict_safe(self._save_state, map_root, default=[])
+        if not thoughts_list:
+            return  # No thoughts to process
         for thought in thoughts_list:
-            if thought["state"] in [
+            if thought.get("state") in [
                 MAPS["All Thoughts"]["forgotten_state"],
                 MAPS["All Thoughts"]["unknown_state"],
             ]:
                 thought["state"] = MAPS["All Thoughts"]["known_state"]
         set_in_dict(self._save_state, map_root, thoughts_list)
-        self._save_state["characterSheet"]["forgottenThoughts"] = []
+        # Only clear forgotten thoughts if characterSheet exists
+        if "characterSheet" in self._save_state:
+            self._save_state["characterSheet"]["forgottenThoughts"] = []
 
     def get_char_sheet_stat(self, key: str) -> int:
         map = (
@@ -118,13 +139,17 @@ class SaveState:
             + MAPS["Character Sheet"][key]
             + [MAPS["Character Sheet"]["map"][0]]
         )
-        return get_from_dict(self._save_state, map)
+        return get_from_dict_safe(self._save_state, map, default=1)
 
     def set_char_sheet_stat(self, key: str, value: int):
         map = MAPS["Character Sheet"]["common_ancestor"] + MAPS["Character Sheet"][key]
-        stat = get_from_dict(self._save_state, map)
-        for edit in MAPS["Character Sheet"]["map"]:
-            stat[edit] = value
+        stat = get_from_dict_safe(self._save_state, map, default={})
+        # If stat doesn't exist, create it with all required fields
+        if not stat:
+            stat = {field: value for field in MAPS["Character Sheet"]["map"]}
+        else:
+            for edit in MAPS["Character Sheet"]["map"]:
+                stat[edit] = value
         set_in_dict(self._save_state, map, stat)
         map = (
             MAPS["char_sheet_ability_modifiers"]["common_ancestor"]
