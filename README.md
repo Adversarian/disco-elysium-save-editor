@@ -20,7 +20,7 @@ Just download the executable from the latest release and run it. This ain't your
 
 # Build (on Windows)
 ## 0. Roll 2D6 and pass a trivial perception check (7) with a (+6) modifier.
-[Dice Roll](https://g.co/kgs/Fn36XA)
+[Dice Roll](https://www.google.com/search?q=2d6)
 ## 1. Clone the repo
 ```cmd
 > git clone https://github.com/Adversarian/disco-elysium-save-editor
