@@ -2,7 +2,7 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  release: 
+  release:
     types: [created]
   workflow_dispatch:
 
@@ -13,20 +13,20 @@ jobs:
     steps:
       # Check-out repository
       - name: Check-out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-      
+          python-version: '3.x'
+          architecture: 'x64'
+
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
 
-      # Build python script into a stand-alone exe
-      - name: Build EXE from Python Script
+      # Build CLI executable
+      - name: Build CLI EXE
         uses: Nuitka/Nuitka-Action@main
         with:
           nuitka-version: main
@@ -34,16 +34,44 @@ jobs:
           onefile: true
           windows-icon-from-ico: assets/save.png
           windows-product-name: Disco Elysium Save Editor
-          windows-product-version: "1.0.0"
+          windows-product-version: "1.1.0"
           windows-file-description: A Save Editor for Disco Elysium
           output-file: DESE
 
-          
-      # Uploads artifact
+      # Move CLI build out of the way before GUI build
+      - name: Stash CLI build
+        shell: bash
+        run: |
+          cp build/DESE.exe DESE.exe
+
+      # Build GUI executable
+      - name: Build GUI EXE
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: src/gui_editor.py
+          onefile: true
+          enable-plugins: pyqt6
+          windows-disable-console: true
+          windows-icon-from-ico: assets/save.png
+          windows-product-name: Disco Elysium Save Editor
+          windows-product-version: "1.1.0"
+          windows-file-description: Save editor for Disco Elysium with PyQt6 GUI
+          output-file: DiscoElysiumSaveEditor
+
+      # Restore CLI build alongside GUI build
+      - name: Restore CLI build
+        shell: bash
+        run: |
+          cp DESE.exe build/DESE.exe
+
+      # Upload artifacts
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: build/DESE.exe
+          files: |
+            build/DESE.exe
+            build/DiscoElysiumSaveEditor.exe

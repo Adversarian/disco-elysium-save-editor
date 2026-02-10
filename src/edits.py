@@ -52,6 +52,10 @@ MAPS = {
         "Motorics": ["MOT", 0, "amount"],
         "common_ancestor": ["characterSheet", "AbilityModifierCauseMap"],
     },
+    "Inventory": {
+        "gained_items": ["gainedItems"],
+        "common_ancestor": ["playerCharacter"],
+    },
 }
 
 
@@ -156,6 +160,31 @@ class SaveState:
             + MAPS["char_sheet_ability_modifiers"][key]
         )
         set_in_dict(self._save_state, map, value)
+
+    def get_inventory(self) -> list:
+        """Returns list of item IDs in gainedItems"""
+        map = MAPS["Inventory"]["common_ancestor"] + MAPS["Inventory"]["gained_items"]
+        return get_from_dict_safe(self._save_state, map, default=[])
+
+    def add_inventory_item(self, item_id: str) -> bool:
+        """Adds item to gainedItems if not already present. Returns True if added."""
+        map = MAPS["Inventory"]["common_ancestor"] + MAPS["Inventory"]["gained_items"]
+        items = get_from_dict_safe(self._save_state, map, default=[])
+        if item_id not in items:
+            items.append(item_id)
+            set_in_dict(self._save_state, map, items)
+            return True
+        return False
+
+    def remove_inventory_item(self, item_id: str) -> bool:
+        """Removes item from gainedItems. Returns True if removed."""
+        map = MAPS["Inventory"]["common_ancestor"] + MAPS["Inventory"]["gained_items"]
+        items = get_from_dict_safe(self._save_state, map, default=[])
+        if item_id in items:
+            items.remove(item_id)
+            set_in_dict(self._save_state, map, items)
+            return True
+        return False
 
     def commit(self, **kwargs):
         write_save_state(self._save_state, self._save_state_path)

@@ -46,6 +46,98 @@ DE_COLORS = {
     "text_dark": "#2d2419",
 }
 
+# Item catalog for inventory management
+ITEM_CATALOG = {
+    "Headwear": [
+        {"id": "hat_faln", "name": "FALN Pipo Pipo", "bonus": "+2 LOG, -1 PER"},
+        {"id": "hat_t500", "name": "Fairweather T-500 Helmet", "bonus": "+1 HAL, -1 SUG"},
+        {"id": "hat_amphibian", "name": "Amphibian Sports Visor", "bonus": "+1 PER"},
+        {"id": "hat_cami", "name": "Camionneur Cap", "bonus": "+1 HAN"},
+        {"id": "hat_mullen", "name": "Dick Mullen's Hat", "bonus": "+1 ENC"},
+        {"id": "hat_orange", "name": "Orange Bum Hat", "bonus": "+1 REA, -1 RHE"},
+        {"id": "hat_rcm", "name": "RCM Lieutenant's Cap", "bonus": "+1 AUT"},
+        {"id": "hat_revolutionary", "name": "Revolutionary's Hat", "bonus": "+1 Mazovian Socio-Economics"},
+        {"id": "hat_samaran", "name": "Samaran Conical Hat", "bonus": "+1 LOG, -1 SUG"},
+        {"id": "hat_headset", "name": "Specialist-Grade Headset", "bonus": "+2 INL, -1 REA"},
+    ],
+    "Glasses": [
+        {"id": "glasses_auditor", "name": "Flip-up Glasses \"The Auditor\"", "bonus": "+1 LOG, -1 AUT"},
+        {"id": "glasses_biker", "name": "Jamrock Biker-Cop Sunnies", "bonus": "+1 EMP, -1 LOG"},
+        {"id": "glasses_bino", "name": "Mega-Bino's Prescription Lenses", "bonus": "+2 ENC, -1 PER"},
+        {"id": "glasses_office", "name": "Neat Office Shades", "bonus": "+1 VIS, -1 DRA"},
+        {"id": "glasses_superstar", "name": "Oversized Superstar Sunglasses", "bonus": "+1 SAV, -1 VIS"},
+        {"id": "glasses_selfdestruction", "name": "Shades of Self-Destruction", "bonus": "+1 ELE, -1 LOG"},
+        {"id": "glasses_rendezvous", "name": "Sunglasses Sub-Insulindic Rendezvous", "bonus": "+1 INL, -1 PER"},
+    ],
+    "Jackets": [
+        {"id": "jacket_suede", "name": "Disco-Ass Blazer", "bonus": "+1 ESP"},
+        {"id": "jacket_nansencoat", "name": "Polar Anorak", "bonus": "+1 COM, +1 SHI"},
+        {"id": "jacket_kimono_robe", "name": "Party Dragon's Silk Robe", "bonus": "+1 DRA, +1 ELE"},
+        {"id": "jacket_mullen", "name": "Pinball Maker's Coat", "bonus": "+1 EMP, +1 HAN"},
+        {"id": "jacket_windbreaker", "name": "Dynamic Windbreaker \"Surf\"", "bonus": "+1 COM, -1 SHI"},
+        {"id": "jacket_faln", "name": "FALN Faln Windbreaker", "bonus": "+1 PAI, +1 HAL, -1 DRA"},
+        {"id": "jacket_frittte", "name": "FRITTTE Plastic Rain Coat", "bonus": "+1 END"},
+        {"id": "jacket_interisolary", "name": "Interisolary Suit Jacket", "bonus": "+1 SUG"},
+        {"id": "jacket_korojev", "name": "Korojev Jacket", "bonus": "+1 LOG"},
+        {"id": "jacket_fuck", "name": "Leather Jacket \"Fuck the World\"", "bonus": "+1 HAL, -1 RHE"},
+        {"id": "jacket_pissf", "name": "Leather Jacket \"Pissf****t\"", "bonus": "+1 DRA, -1 AUT"},
+        {"id": "jacket_rcm", "name": "RCM Commander's Jacket", "bonus": "+1 ESP, +1 VIS"},
+        {"id": "jacket_cloak", "name": "RCM Patrol Cloak", "bonus": "+1 ESP, +1 SHI"},
+        {"id": "jacket_constvest", "name": "Reflective Construction Vest", "bonus": "+1 END, -1 REA"},
+        {"id": "jacket_carabineer", "name": "Royal Carabineer Jacket", "bonus": "+1 Revacholian Nationhood"},
+        {"id": "jacket_saramirizian", "name": "Saramirizian Lounge Jacket", "bonus": "+1 CON"},
+        {"id": "jacket_naval", "name": "Signal-Blue Naval Coat", "bonus": "+1 SUG, -1 HAL"},
+    ],
+    "Shirts": [
+        {"id": "shirt_mesh", "name": "Insane Mesh Tank Top", "bonus": "+1 DRA"},
+        {"id": "shirt_dress_disco", "name": "Disco Dress Shirt", "bonus": ""},
+        {"id": "shirt_t500", "name": "Fairweather T-500 Cuirass", "bonus": "+1 VOL, +1 PAI, -1 EMP"},
+        {"id": "shirt_faln", "name": "FALN Arrower Shirt", "bonus": "+1 HAN"},
+        {"id": "shirt_interisolary", "name": "Interisolary Dress Shirt", "bonus": "+1 LOG"},
+        {"id": "shirt_hjelmdall", "name": "T-Shirt \"Man From Hjelmdall\"", "bonus": "+1 PHY, +1 SHI, -2 AUT"},
+        {"id": "shirt_polo", "name": "White Polo Shirt", "bonus": "+1 RHE, -1 EMP"},
+        {"id": "shirt_satin", "name": "White Satin Shirt", "bonus": "+1 CON, -1 SUG"},
+        {"id": "shirt_tank", "name": "White Tank Top", "bonus": "+1 PHY"},
+    ],
+    "Neckwear": [
+        {"id": "neck_tie", "name": "Horrific Necktie", "bonus": "+1 INL"},
+        {"id": "neck_scarf_army", "name": "Army Surplus Winter Scarf", "bonus": "+2 EMP, -1 COM"},
+        {"id": "neck_bow", "name": "Bow Knot", "bonus": "+2 DRA"},
+        {"id": "neck_teratorn", "name": "Eight-Eyed Teratorn Tie", "bonus": "+1 INL, +1 VOL"},
+        {"id": "neck_medal", "name": "Medal \"The Setting Sun\"", "bonus": "+1 RHE"},
+        {"id": "neck_scarf_silk", "name": "Mesque Banger's Silk Scarf", "bonus": "+1 PAI"},
+        {"id": "neck_scented", "name": "Scented Scarf", "bonus": "+1 SHI, -2 PHY"},
+    ],
+    "Gloves": [
+        {"id": "gloves_garden", "name": "Yellow Gardening Gloves", "bonus": "+1 INT"},
+        {"id": "gloves_t500", "name": "Fairweather T-500 Gauntlets", "bonus": "+2 INT"},
+        {"id": "gloves_fingerless", "name": "Fingerless Gloves", "bonus": "+1 ELE"},
+        {"id": "gloves_faln", "name": "FALN Ultra Series Gloves", "bonus": "+1 HAL"},
+    ],
+    "Pants": [
+        {"id": "pants_bellbottom", "name": "Flare-cut Trousers", "bonus": "+1 ELE, -1 SAV"},
+        {"id": "pants_jeans", "name": "Regular Black Jeans", "bonus": "+1 COM"},
+        {"id": "pants_faln", "name": "FALN Modular Track Pants", "bonus": "+1 PHY, +1 SAV"},
+        {"id": "pants_itchy", "name": "Itchy Pants", "bonus": "+2 HAL, -1 SAV, -1 COM"},
+        {"id": "pants_laborer", "name": "Pour L'Homme Labourer Jeans", "bonus": "+1 ELE, -1 REA"},
+        {"id": "pants_rcm", "name": "RCM Lieutenant's Pants", "bonus": "+1 AUT, +1 SUG"},
+        {"id": "pants_carabineer", "name": "Royal Carabineer Pants", "bonus": "+1 REA"},
+    ],
+    "Shoes": [
+        {"id": "shoes_donks", "name": "Speedfreaks DONKS", "bonus": "+1 PHY, +1 ELE, -1 INT"},
+        {"id": "shoes_t500", "name": "Fairweather T-500 Greaves", "bonus": "+2 AUT, -1 COM"},
+        {"id": "shoes_faln", "name": "FALN Ultra Series Sneakers", "bonus": "-1 ENC, +1 HAN, +1 REA"},
+        {"id": "shoes_cavalry", "name": "Franconigerian Cavalry Boots", "bonus": "+1 PER"},
+        {"id": "shoes_snakeskin", "name": "Green Snakeskin Shoes", "bonus": "-1 SAV, +1 COM"},
+        {"id": "shoes_brogues", "name": "Mesque Banger's Red Brogues", "bonus": "+1 EMP"},
+    ],
+    "Tools": [
+        {"id": "lieutenants_handkerchief", "name": "Kim's Handkerchief", "bonus": ""},
+        {"id": "tool_ledger_failure", "name": "Ledger of Failure and Hatred", "bonus": "+1 INL, +1 EMP, -2 AUT"},
+        {"id": "tool_ledger_oblivion", "name": "Ledger of Oblivion", "bonus": "-1 INL, +1 AUT, +1 SUG"},
+    ],
+}
+
 
 class TextureManager:
     """Manages loading and tinting paper textures"""
@@ -403,6 +495,11 @@ class DiscoElysiumSaveEditor(QMainWindow):
         self.entry_widgets = {}
         self.door_checkboxes = {}
 
+        # Inventory tracking
+        self.pending_inventory_adds = set()  # Items to add on commit
+        self.pending_inventory_removes = set()  # Items to remove on commit
+        self.current_inventory_items = []  # Current items from save
+
         # References for texture application
         self.commit_button = None
         self.rollback_button = None
@@ -593,12 +690,15 @@ class DiscoElysiumSaveEditor(QMainWindow):
         self.tab_doors = QWidget()
         self.tab_thoughts = QWidget()
         self.tab_time = QWidget()
+        self.tab_inventory = QWidget()
 
         self.tabs.addTab(self.tab_resources, "◆ Resources")
         self.tabs.addTab(self.tab_stats, "◇ Character")
         self.tabs.addTab(self.tab_doors, "◈ Doors")
         self.tabs.addTab(self.tab_thoughts, "◉ Thoughts")
         self.tabs.addTab(self.tab_time, "⧗ Time")
+        # Inventory tab hidden until item loading is hooked up
+        # self.tabs.addTab(self.tab_inventory, "◊ Inventory")
 
         # Setup each tab
         self.setup_resources_tab()
@@ -843,6 +943,309 @@ class DiscoElysiumSaveEditor(QMainWindow):
         layout.addWidget(time_frame)
         layout.addStretch()
 
+    def setup_inventory_tab(self):
+        """Setup inventory tab with item catalog and current inventory"""
+        layout = QHBoxLayout(self.tab_inventory)
+        layout.setSpacing(10)
+
+        # Left side - Item Catalog (scrollable, categorized)
+        catalog_frame = OrnateFrame(title="Item Catalog", title_color=DE_COLORS['intellect'], bg_color_key="bg_dark")
+        catalog_frame.setMinimumWidth(500)
+
+        catalog_scroll = QScrollArea()
+        catalog_scroll.setWidgetResizable(True)
+        catalog_scroll.setStyleSheet(f"background-color: {DE_COLORS['bg_dark']};")
+
+        catalog_content = QWidget()
+        catalog_layout = QVBoxLayout(catalog_content)
+        catalog_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        catalog_layout.setSpacing(5)
+
+        # Build catalog UI by category
+        for category, items in ITEM_CATALOG.items():
+            # Category header
+            category_header = QLabel(f"▼ {category.upper()}")
+            category_header.setStyleSheet(f"""
+                QLabel {{
+                    background-color: {DE_COLORS['bg_medium']};
+                    color: {DE_COLORS['accent_gold']};
+                    padding: 8px;
+                    font-family: 'Cambria';
+                    font-size: 11pt;
+                    font-weight: bold;
+                    border: 1px solid {DE_COLORS['accent_gold']};
+                }}
+            """)
+            catalog_layout.addWidget(category_header)
+
+            # Items in category
+            for item in items:
+                item_widget = self.create_catalog_item_widget(item)
+                catalog_layout.addWidget(item_widget)
+
+        catalog_scroll.setWidget(catalog_content)
+        catalog_frame.content_layout.addWidget(catalog_scroll)
+        layout.addWidget(catalog_frame, 2)
+
+        # Right side - Current Inventory
+        inventory_frame = OrnateFrame(title="Your Items", title_color=DE_COLORS['psyche'], bg_color_key="bg_dark")
+        inventory_frame.setMinimumWidth(350)
+
+        self.inventory_scroll = QScrollArea()
+        self.inventory_scroll.setWidgetResizable(True)
+        self.inventory_scroll.setStyleSheet(f"background-color: {DE_COLORS['bg_dark']};")
+
+        self.inventory_content = QWidget()
+        self.inventory_layout = QVBoxLayout(self.inventory_content)
+        self.inventory_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.inventory_layout.setSpacing(5)
+
+        # Placeholder message
+        self.inventory_placeholder = QLabel("Load a save file to see inventory")
+        self.inventory_placeholder.setStyleSheet(f"""
+            QLabel {{
+                color: {DE_COLORS['text_medium']};
+                font-family: 'Book Antiqua';
+                font-size: 10pt;
+                font-style: italic;
+                padding: 20px;
+            }}
+        """)
+        self.inventory_placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.inventory_layout.addWidget(self.inventory_placeholder)
+
+        self.inventory_scroll.setWidget(self.inventory_content)
+        inventory_frame.content_layout.addWidget(self.inventory_scroll)
+        layout.addWidget(inventory_frame, 1)
+
+    def create_catalog_item_widget(self, item):
+        """Create a widget for an item in the catalog"""
+        widget = QWidget()
+        widget.setStyleSheet(f"""
+            QWidget {{
+                background-color: {DE_COLORS['bg_darkest']};
+                border: 1px solid {DE_COLORS['bg_medium']};
+            }}
+            QWidget:hover {{
+                border-color: {DE_COLORS['accent_gold']};
+            }}
+        """)
+
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(8, 6, 8, 6)
+        layout.setSpacing(10)
+
+        # Item info
+        info_layout = QVBoxLayout()
+        info_layout.setSpacing(2)
+
+        name_label = QLabel(item["name"])
+        name_label.setStyleSheet(f"""
+            QLabel {{
+                color: {DE_COLORS['text_light']};
+                font-family: 'Book Antiqua';
+                font-size: 10pt;
+                font-weight: bold;
+                background: transparent;
+                border: none;
+            }}
+        """)
+        info_layout.addWidget(name_label)
+
+        if item["bonus"]:
+            bonus_label = QLabel(item["bonus"])
+            bonus_label.setStyleSheet(f"""
+                QLabel {{
+                    color: {DE_COLORS['accent_gold']};
+                    font-family: 'Consolas';
+                    font-size: 9pt;
+                    background: transparent;
+                    border: none;
+                }}
+            """)
+            info_layout.addWidget(bonus_label)
+
+        layout.addLayout(info_layout, 1)
+
+        # Add button
+        add_btn = QPushButton("+")
+        add_btn.setFixedSize(30, 30)
+        add_btn.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {DE_COLORS['accent_orange']};
+                color: {DE_COLORS['bg_darkest']};
+                font-size: 16pt;
+                font-weight: bold;
+                border: 2px solid {DE_COLORS['accent_gold']};
+            }}
+            QPushButton:hover {{
+                background-color: {DE_COLORS['accent_amber']};
+            }}
+        """)
+        add_btn.clicked.connect(lambda checked, i=item: self.add_item_to_inventory(i))
+        layout.addWidget(add_btn)
+
+        return widget
+
+    def create_inventory_item_widget(self, item_id, item_info=None):
+        """Create a widget for an item in current inventory"""
+        widget = QWidget()
+        widget.setStyleSheet(f"""
+            QWidget {{
+                background-color: {DE_COLORS['bg_medium']};
+                border: 1px solid {DE_COLORS['accent_gold']};
+            }}
+        """)
+
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(8, 6, 8, 6)
+        layout.setSpacing(10)
+
+        # Item info
+        info_layout = QVBoxLayout()
+        info_layout.setSpacing(2)
+
+        # Try to find item info from catalog if not provided
+        if item_info is None:
+            item_info = self.get_item_info_by_id(item_id)
+
+        if item_info:
+            name_label = QLabel(item_info["name"])
+            name_label.setStyleSheet(f"""
+                QLabel {{
+                    color: {DE_COLORS['text_light']};
+                    font-family: 'Book Antiqua';
+                    font-size: 10pt;
+                    font-weight: bold;
+                    background: transparent;
+                    border: none;
+                }}
+            """)
+            info_layout.addWidget(name_label)
+
+            if item_info.get("bonus"):
+                bonus_label = QLabel(item_info["bonus"])
+                bonus_label.setStyleSheet(f"""
+                    QLabel {{
+                        color: {DE_COLORS['accent_gold']};
+                        font-family: 'Consolas';
+                        font-size: 9pt;
+                        background: transparent;
+                        border: none;
+                    }}
+                """)
+                info_layout.addWidget(bonus_label)
+        else:
+            # Unknown item - just show ID
+            name_label = QLabel(item_id)
+            name_label.setStyleSheet(f"""
+                QLabel {{
+                    color: {DE_COLORS['text_medium']};
+                    font-family: 'Consolas';
+                    font-size: 9pt;
+                    background: transparent;
+                    border: none;
+                }}
+            """)
+            info_layout.addWidget(name_label)
+
+        layout.addLayout(info_layout, 1)
+
+        # Remove button
+        remove_btn = QPushButton("×")
+        remove_btn.setFixedSize(30, 30)
+        remove_btn.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {DE_COLORS['physique']};
+                color: {DE_COLORS['text_light']};
+                font-size: 16pt;
+                font-weight: bold;
+                border: 2px solid {DE_COLORS['accent_gold']};
+            }}
+            QPushButton:hover {{
+                background-color: #ff6666;
+            }}
+        """)
+        remove_btn.clicked.connect(lambda checked, iid=item_id: self.remove_item_from_inventory(iid))
+        layout.addWidget(remove_btn)
+
+        return widget
+
+    def get_item_info_by_id(self, item_id):
+        """Look up item info from catalog by ID"""
+        for category, items in ITEM_CATALOG.items():
+            for item in items:
+                if item["id"] == item_id:
+                    return item
+        return None
+
+    def add_item_to_inventory(self, item):
+        """Add an item to the pending inventory adds"""
+        item_id = item["id"]
+
+        # Check if already in current inventory or pending adds
+        effective_inventory = set(self.current_inventory_items) | self.pending_inventory_adds - self.pending_inventory_removes
+
+        if item_id in effective_inventory:
+            QMessageBox.information(self, "Already Owned", f"You already have {item['name']} in your inventory.")
+            return
+
+        # If it was pending removal, just cancel the removal
+        if item_id in self.pending_inventory_removes:
+            self.pending_inventory_removes.discard(item_id)
+        else:
+            self.pending_inventory_adds.add(item_id)
+
+        self.refresh_inventory_display()
+        self.set_status(f"Added {item['name']} (commit to save)")
+
+    def remove_item_from_inventory(self, item_id):
+        """Remove an item from inventory"""
+        item_info = self.get_item_info_by_id(item_id)
+        item_name = item_info["name"] if item_info else item_id
+
+        # If it was pending addition, just cancel the addition
+        if item_id in self.pending_inventory_adds:
+            self.pending_inventory_adds.discard(item_id)
+        else:
+            self.pending_inventory_removes.add(item_id)
+
+        self.refresh_inventory_display()
+        self.set_status(f"Removed {item_name} (commit to save)")
+
+    def refresh_inventory_display(self):
+        """Refresh the inventory display based on current state"""
+        # Clear existing items
+        while self.inventory_layout.count():
+            child = self.inventory_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        # Calculate effective inventory
+        effective_inventory = (set(self.current_inventory_items) | self.pending_inventory_adds) - self.pending_inventory_removes
+
+        if not effective_inventory:
+            placeholder = QLabel("No items in inventory")
+            placeholder.setStyleSheet(f"""
+                QLabel {{
+                    color: {DE_COLORS['text_medium']};
+                    font-family: 'Book Antiqua';
+                    font-size: 10pt;
+                    font-style: italic;
+                    padding: 20px;
+                }}
+            """)
+            placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.inventory_layout.addWidget(placeholder)
+            return
+
+        # Add widgets for each item
+        for item_id in sorted(effective_inventory):
+            item_widget = self.create_inventory_item_widget(item_id)
+            self.inventory_layout.addWidget(item_widget)
+
+        self.inventory_layout.addStretch()
+
     def create_stat_entry(self, parent, label, description=""):
         """Helper to create a stat entry widget"""
         entry = StatEntry(parent, label, description)
@@ -1014,6 +1417,12 @@ class DiscoElysiumSaveEditor(QMainWindow):
             # Doors
             for door_name, checkbox in self.door_checkboxes.items():
                 checkbox.setChecked(self.save_state.get_door(door_name))
+
+            # Inventory
+            self.current_inventory_items = list(self.save_state.get_inventory())
+            self.pending_inventory_adds.clear()
+            self.pending_inventory_removes.clear()
+            self.refresh_inventory_display()
         except Exception as e:
             self.set_status(f"Error populating fields: {e}")
 
@@ -1043,8 +1452,21 @@ class DiscoElysiumSaveEditor(QMainWindow):
             for door_name, checkbox in self.door_checkboxes.items():
                 self.save_state.set_door(door_name, checkbox.isChecked())
 
+            # Inventory - apply pending adds
+            for item_id in self.pending_inventory_adds:
+                self.save_state.add_inventory_item(item_id)
+
+            # Inventory - apply pending removes
+            for item_id in self.pending_inventory_removes:
+                self.save_state.remove_inventory_item(item_id)
+
             # Commit
             self.save_state.commit()
+
+            # Update current inventory state after successful commit
+            self.current_inventory_items = list(self.save_state.get_inventory())
+            self.pending_inventory_adds.clear()
+            self.pending_inventory_removes.clear()
 
             self.set_status("Changes committed successfully!")
             QMessageBox.information(self, "Success", "Changes saved successfully!")
@@ -1059,6 +1481,9 @@ class DiscoElysiumSaveEditor(QMainWindow):
 
         try:
             self.save_state.rollback()
+            # Reset inventory pending changes
+            self.pending_inventory_adds.clear()
+            self.pending_inventory_removes.clear()
             self.set_status("Changes rolled back")
             self.populate_fields()
         except Exception as e:

@@ -7,8 +7,8 @@ nuitka `
     --windows-disable-console `
     --windows-icon-from-ico="assets\save.png" `
     --product-name="Disco Elysium Save Editor" `
-    --product-version="1.0.0" `
-    --file-version="1.0.0.0" `
+    --product-version="1.1.0" `
+    --file-version="1.1.0.0" `
     --file-description="Save editor for Disco Elysium with PyQt6 GUI" `
     --company-name="KeepP" `
     --copyright="MIT License" `
