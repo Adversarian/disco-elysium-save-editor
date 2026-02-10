@@ -14,7 +14,17 @@ This tool provides facilities for altering the following:
 If you're looking for a specific feature, feel to submit an [issue](https://github.com/Adversarian/disco-elysium-save-editor/issues) or if you can read this absolute mess of a code and do it yourself, a [PR](https://github.com/Adversarian/disco-elysium-save-editor/pulls). There's a fairly decent chance I won't get around to implementing it but at least you can take comfort in the fact that you have done your due diligence.
 
 # Usage
-Just download the executable from the latest release and run it. This ain't your first rodeo.
+
+## GUI (Recommended)
+The editor features a PyQt6-based GUI with authentic Disco Elysium styling:
+
+```bash
+cd src
+python gui_editor.py
+```
+
+## Executable
+Alternatively, download the executable from the latest release and run it. This ain't your first rodeo.
 
 **Note**: *Your AV is probably going to throw a false-positive at the EXE file. I'm not sure how to fix it yet but it seems to be an inherent issue with Python compilers. Rest assured however that the EXE is virus free (to the best of my knowledge). However, if you're still not comfortable with this, you can follow the steps below to build the project yourself (or y'know, just run it on Python since you already need to have it installed to build the executable with [Nuitka](https://nuitka.net/)).*
 
