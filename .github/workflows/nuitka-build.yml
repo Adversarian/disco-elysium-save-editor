@@ -1,6 +1,5 @@
 name: CI
 
-# Controls when the workflow will run
 on:
   release:
     types: [created]
@@ -11,61 +10,54 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Check-out repository
       - name: Check-out repository
         uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
           architecture: 'x64'
 
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
 
-      # Build CLI executable
       - name: Build CLI EXE
-        uses: Nuitka/Nuitka-Action@main
+        uses: Nuitka/Nuitka-Action@v1.4
         with:
-          nuitka-version: main
+          nuitka-version: 4.0.1
           script-name: src/save_editor.py
-          onefile: true
+          mode: onefile
           windows-icon-from-ico: assets/save.png
           windows-product-name: Disco Elysium Save Editor
           windows-product-version: "1.1.0"
           windows-file-description: A Save Editor for Disco Elysium
+          output-dir: build/cli
           output-file: DESE
 
-      # Move CLI build out of the way before GUI build
-      - name: Stash CLI build
-        shell: bash
-        run: |
-          cp build/DESE.exe DESE.exe
-
-      # Build GUI executable
       - name: Build GUI EXE
-        uses: Nuitka/Nuitka-Action@main
+        uses: Nuitka/Nuitka-Action@v1.4
         with:
-          nuitka-version: main
+          nuitka-version: 4.0.1
           script-name: src/gui_editor.py
-          onefile: true
+          mode: onefile
           enable-plugins: pyqt6
           windows-disable-console: true
           windows-icon-from-ico: assets/save.png
           windows-product-name: Disco Elysium Save Editor
           windows-product-version: "1.1.0"
           windows-file-description: Save editor for Disco Elysium with PyQt6 GUI
+          output-dir: build/gui
           output-file: DiscoElysiumSaveEditor
 
-      # Restore CLI build alongside GUI build
-      - name: Restore CLI build
+      - name: Stage release artifacts
         shell: bash
         run: |
-          cp DESE.exe build/DESE.exe
+          mkdir -p build
+          cp build/cli/DESE.exe build/DESE.exe
+          cp build/gui/DiscoElysiumSaveEditor.exe build/DiscoElysiumSaveEditor.exe
 
-      # Upload artifacts
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
