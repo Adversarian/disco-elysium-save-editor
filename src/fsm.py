@@ -1,6 +1,7 @@
 import random
 import sys
 from enum import Enum
+from pathlib import Path
 
 from edits import *
 from messages import *
@@ -71,7 +72,21 @@ def state_options_edit_start(previous_state):
 
 
 def state_manual_save():
-    return get_input(str, "Please enter the complete path to your save file: \n")
+    path = get_input(
+        str, "Please enter the path to a save file or the root of your save folder: \n"
+    ).strip()
+    if Path(path).expanduser().is_file():
+        return str(Path(path).expanduser())
+
+    parsed_saves = parse_saves(path)
+    if not parsed_saves:
+        raise ValueError("No .zip save files were found at the supplied path.")
+
+    parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
+    print("These are your save files:")
+    pprint_dict(parsed_saves_int_map)
+    choice = get_input(int, "Which one would you like to modify: ")
+    return parsed_saves[parsed_saves_int_map[choice]]
 
 
 def state_auto_discover_saves():
@@ -83,9 +98,9 @@ def state_auto_discover_saves():
             + Fore.RESET
             + " Unable to discover save files. Please enter a path to the root of your save folder manually."
         )
-        return get_input(str, get_prompt_msg())
+        return state_manual_save()
     if success:
-        print(Fore.GREEN + f"[+]" + Fore.RESET + " Default save path exists at {path}")
+        print(Fore.GREEN + f"[+]" + Fore.RESET + f" Default save path exists at {path}")
         parsed_saves = parse_saves(path)
         if parsed_saves:
             parsed_saves_int_map = {i: k for i, k in enumerate(parsed_saves.keys())}
@@ -252,7 +267,7 @@ def state_auto_discover_backups():
             + Fore.RESET
             + " Unable to discover backup files. Please enter a path to the root of your backup folder manually."
         )
-        return get_input(str, get_prompt_msg())
+        return state_manual_backup()
     if success:
         discovered_backups = discover_baks(path)
         if discovered_backups:
@@ -274,7 +289,23 @@ def state_auto_discover_backups():
 
 
 def state_manual_backup():
-    return get_input(str, "Please enter the complete path to your backup file: \n")
+    path = get_input(
+        str, "Please enter the path to a backup file or the root of your backup folder: \n"
+    ).strip()
+    if Path(path).expanduser().is_file():
+        return str(Path(path).expanduser())
+
+    discovered_backups = discover_baks(path)
+    if not discovered_backups:
+        raise ValueError("No .bak backup files were found at the supplied path.")
+
+    discovered_backups_int_map = {
+        i: k for i, k in enumerate(discovered_backups.keys())
+    }
+    print("These are your backups:")
+    pprint_dict(discovered_backups_int_map)
+    choice = get_input(int, "Which backup would you like to restore: ")
+    return discovered_backups[discovered_backups_int_map[choice]]
 
 
 def state_options_restore(previous_state):

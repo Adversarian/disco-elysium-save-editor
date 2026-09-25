@@ -28,26 +28,30 @@ Alternatively, download the executable from the latest release and run it. This 
 
 **Note**: *Your AV is probably going to throw a false-positive at the EXE file. I'm not sure how to fix it yet but it seems to be an inherent issue with Python compilers. Rest assured however that the EXE is virus free (to the best of my knowledge). However, if you're still not comfortable with this, you can follow the steps below to build the project yourself (or y'know, just run it on Python since you already need to have it installed to build the executable with [Nuitka](https://nuitka.net/)).*
 
-# Build (on Windows)
+# Build (on macOS)
 ## 0. Roll 2D6 and pass a trivial perception check (7) with a (+6) modifier.
 [Dice Roll](https://www.google.com/search?q=2d6)
 ## 1. Clone the repo
-```cmd
-> git clone https://github.com/Adversarian/disco-elysium-save-editor
+```bash
+git clone https://github.com/Adversarian/disco-elysium-save-editor
 ```
-## 2. Install Nuitka
-```cmd
-> pip install nuitka
+## 2. Install uv and Xcode
+Nuitka compiles the command-line editor, so install Xcode from the App Store and install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+## 3. Synchronize the build environment
+```bash
+cd disco-elysium-save-editor
+uv sync --group build
 ```
-## 3. And then the requirements (someone probably should make a requirements-dev.txt so that you don't have to do 2 steps for requirements)
-```cmd
-> cd disco-elysium-save-editor
-> pip install -r requirements.txt
+## 4. Build the console editor
+```bash
+./nuitka-build.sh
 ```
-## 4. Run `nuitka-build.ps1` to build the executable with Nuitka.
-```cmd
-> .\nuitka-build.ps1
+The one-file executable is written to `build/DESE`.
+## 5. Build the GUI editor
+```bash
+./build-gui.sh
 ```
+The application bundle is written to `build/DiscoElysiumSaveEditor.app`.
 
 # To Do
 - I don't know what to do.
