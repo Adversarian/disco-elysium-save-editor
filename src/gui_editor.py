@@ -1460,8 +1460,8 @@ class DiscoElysiumSaveEditor(QMainWindow):
             for item_id in self.pending_inventory_removes:
                 self.save_state.remove_inventory_item(item_id)
 
-            # Commit
-            self.save_state.commit()
+            # Keep the workspace for further edits in this open editor session.
+            self.save_state.commit(cleanup=False)
 
             # Update current inventory state after successful commit
             self.current_inventory_items = list(self.save_state.get_inventory())
@@ -1481,6 +1481,7 @@ class DiscoElysiumSaveEditor(QMainWindow):
 
         try:
             self.save_state.rollback()
+            self.save_state = SaveState(self.current_save_path)
             # Reset inventory pending changes
             self.pending_inventory_adds.clear()
             self.pending_inventory_removes.clear()
